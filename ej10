@@ -1,0 +1,89 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        long milisegundosEjecutados = 23641200;
+        double importeFactura;
+
+        List<Long> tiempo = CalcularMilisegs(milisegundosEjecutados);
+        importeFactura = CalcularImporte(tiempo);
+
+        System.out.printf("Este es el importe total: %.2f €\n", importeFactura);
+    }
+
+    protected static List<Long> CalcularMilisegs(long milisegundosEjecutados) {
+        final int HORAS_MIN = 60;
+        final int MIN_SEG = 60;
+        final int SEG_MIL = 1000;
+
+        List<Long> tabla = new ArrayList<>();
+        long hE = 0, mE = 0, sE = 0;
+
+        while (milisegundosEjecutados >= HORAS_MIN * MIN_SEG * SEG_MIL) {
+            hE += 1;
+            milisegundosEjecutados -= HORAS_MIN * MIN_SEG * SEG_MIL;
+        }
+        tabla.add(hE);
+
+        while (milisegundosEjecutados >= MIN_SEG * SEG_MIL) {
+            mE += 1;
+            milisegundosEjecutados -= MIN_SEG * SEG_MIL;
+        }
+        tabla.add(mE);
+
+        while (milisegundosEjecutados >= SEG_MIL) {
+            sE += 1;
+            milisegundosEjecutados -= SEG_MIL;
+        }
+        tabla.add(sE);
+
+        return tabla;
+    }
+
+    protected static double CalcularImporte(List<Long> tiempo) {
+        final double COSTE_INICIAL = 10.0;
+        final double IVA = 0.18;
+
+        long hE = tiempo.get(0);
+        long mE = tiempo.get(1);
+        long sE = tiempo.get(2);
+
+        double coste = 0;
+        long coeficiente = 0;
+
+        // Por cada hora entera, se suma el coste fijo
+        while (hE > 0) {
+            coeficiente += 1;
+            coste += COSTE_INICIAL;
+            hE--;
+        }
+
+        // Calculamos el divisor en función del coeficiente
+        double divisor = Math.pow(2, coeficiente);
+
+        // Calculamos cuántos tramos de minutos hay
+        long numME = (long) (mE / (60.0 / divisor)); // Ej: 36 min / 15 = 2.4 → 2 tramos
+
+        // Si los minutos encajan justo, y hay segundos, se cobra un tramo extra
+        if ((mE % (60 / divisor)) == 0 && sE != 0) {
+            coste += COSTE_INICIAL / divisor;
+        }
+
+        while (numME != 0) {
+            coste += COSTE_INICIAL / divisor;
+            numME--;
+        }
+
+        return coste * (1 + IVA); // Aplicamos IVA
+    }
+}
+
