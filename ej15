@@ -1,0 +1,19 @@
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        StringBuilder cadena = new StringBuilder("Mi vaso de vino esta vacio");
+        char letraBuscada = 'v';
+        char marcaDeLetra = '*';
+        int pos = cadena.length();
+        StringBuilder copia = new StringBuilder();
+        for (int i = 0; i < cadena.length(); i++) {
+            copia.append(' ');}
+        pos = cadena.toString().indexOf(letraBuscada);
+        while(pos != -1){
+                copia.setCharAt(pos, '*');
+                pos = cadena.toString().indexOf(letraBuscada, pos+1);
+            }
+        
+        System.out.println(cadena);
+        System.out.println(copia);    }}
